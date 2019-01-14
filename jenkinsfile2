@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build'){
+            steps {
+                echo 'Building'
+                echo 'hey'
+
+            }
+        }
+    }
+        stage('Test'){
+            steps{
+                bat 'set'
+                sh 'echo "fail!"; exit1'
+            }
+        }
+        stage('deploy'){
+            steps{
+                retry(3){
+                    sh './flakey-deploy.sh'
+                }
+                timeout(time:3, unit: 'MINUTES'){
+                    sh './health-check.sh
+                }
+            }
+        }
+}
